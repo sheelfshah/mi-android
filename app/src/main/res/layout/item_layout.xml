@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <ImageView
+        android:id="@+id/itemimage"
+        android:layout_width="68dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/stat_sys_vp_phone_call" />
+
+    <TextView
+        android:id="@+id/itemname"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:height="24sp"
+        android:gravity="center|center_horizontal"
+        android:text="hi"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemimage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/itemcontact"
+        android:layout_width="294dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/itemname"
+        app:layout_constraintStart_toStartOf="@+id/itemname"
+        app:layout_constraintTop_toBottomOf="@+id/itemname" />
+
+    <TextView
+        android:id="@+id/itemcategory"
+        android:layout_width="289dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="20dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/itemcontact"
+        app:layout_constraintStart_toStartOf="@+id/itemcontact"
+        app:layout_constraintTop_toBottomOf="@+id/itemcontact" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
