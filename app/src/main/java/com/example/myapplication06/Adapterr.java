@@ -58,7 +58,6 @@ public class Adapterr extends RecyclerView.Adapter<Adapterr.Viewholderr> {
         builder.downloader(new OkHttp3Downloader(context));
         String str=participant.idcard;
         str=str.replace("/registrationdata","");
-        Log.d("xaax",str);
         ImageView img = holder.idcard;
         Picasso.get().load(str).resize(400,400).centerCrop().into(img);
         holder.idcard=img;

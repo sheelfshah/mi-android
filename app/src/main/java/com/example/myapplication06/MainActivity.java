@@ -19,4 +19,9 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("category",((TextView)v).getText().toString());
         startActivity(i);
     }
+
+    public void btnClick(View v){
+        Intent i=new Intent(this,ScannedBarcodeActivity.class);
+        startActivity(i);
+    }
 }

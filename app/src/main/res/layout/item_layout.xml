@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/itemcontact"
+        android:id="@+id/urltext"
         android:layout_width="294dp"
         android:layout_height="33dp"
         android:layout_marginTop="20dp"
