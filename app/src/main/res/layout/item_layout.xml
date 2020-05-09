@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/urltext"
+        android:id="@+id/itemcontact"
         android:layout_width="294dp"
         android:layout_height="33dp"
         android:layout_marginTop="20dp"
@@ -49,7 +49,7 @@
         android:text="TextView"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/itemcontact"
-        app:layout_constraintStart_toStartOf="@+id/itemcontact"
+        app:layout_constraintStart_toStartOf="@+id/urltext"
         app:layout_constraintTop_toBottomOf="@+id/itemcontact" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -26,8 +27,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-public class ScannedBarcodeActivity extends AppCompatActivity {
 
+public class ScannedBarcodeActivity extends AppCompatActivity {
     SurfaceView surfaceView;
     TextView txtBarcodeValue;
     private BarcodeDetector barcodeDetector;
@@ -68,7 +69,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     }
 
     private void initialiseDetectorsAndSources() {
-
+        Log.d("xeex","in init");
         Toast.makeText(getApplicationContext(), "QR code scanner started", Toast.LENGTH_SHORT).show();
 
         barcodeDetector = new BarcodeDetector.Builder(this)
@@ -84,31 +85,27 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 try {
-                    if (ActivityCompat.checkSelfPermission(ScannedBarcodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    if(ActivityCompat.checkSelfPermission(ScannedBarcodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         cameraSource.start(surfaceView.getHolder());
-                    } else {
-                        ActivityCompat.requestPermissions(ScannedBarcodeActivity.this, new
-                                String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                     }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    else{
+                        ActivityCompat.requestPermissions(
+                                ScannedBarcodeActivity.this,
+                                new String[] { Manifest.permission.CAMERA},
+                                REQUEST_CAMERA_PERMISSION);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-
-
             }
-
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             }
-
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 cameraSource.stop();
             }
         });
-
-
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -159,6 +156,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d("xeex","in resume");
         super.onResume();
         initialiseDetectorsAndSources();
     }
