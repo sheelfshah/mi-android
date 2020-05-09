@@ -3,6 +3,7 @@ package com.example.myapplication06;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -36,7 +38,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 201;
     Button btnAction;
     String intentData = "";
-    boolean isEmail = false;
+    boolean noprevpermission = false;
 
 
     @Override
@@ -87,6 +89,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                 try {
                     if(ActivityCompat.checkSelfPermission(ScannedBarcodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         cameraSource.start(surfaceView.getHolder());
+                        noprevpermission=false;
                     }
                     else{
                         ActivityCompat.requestPermissions(
@@ -106,10 +109,19 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                 cameraSource.stop();
             }
         });
+        if(ActivityCompat.checkSelfPermission(ScannedBarcodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && noprevpermission) {
+            try {
+                cameraSource.start(surfaceView.getHolder());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            noprevpermission=false;
+        }
+
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-                Toast.makeText(getApplicationContext(), "To prevent memory leaks barcode scanner has been stopped", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Scanning Stopped", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -122,7 +134,6 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-                            isEmail = false;
                             btnAction.setText("VIEW URL");
                             btnAction.setClickable(true);
                             intentData = barcodes.valueAt(0).displayValue;
@@ -136,7 +147,6 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-                            isEmail = false;
                             btnAction.setText("No URL Found");
                             btnAction.setClickable(false);
                             txtBarcodeValue.setText("No QR code detected");
@@ -156,8 +166,56 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        Log.d("xeex","in resume");
         super.onResume();
         initialiseDetectorsAndSources();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //The External Storage Write Permission is granted to you... Continue your left job...
+                noprevpermission=true;
+                initialiseDetectorsAndSources();
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(ScannedBarcodeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    //Show Information about why you need the permission
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ScannedBarcodeActivity.this);
+                    builder.setTitle("Need Storage Permission");
+                    builder.setMessage("This app needs storage permission");
+                    builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+
+
+                            ActivityCompat.requestPermissions(ScannedBarcodeActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+
+
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                } else {
+                    Toast.makeText(getBaseContext(),"Unable to get Permission",Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (ActivityCompat.checkSelfPermission(ScannedBarcodeActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                //Got Permission
+                noprevpermission=true;
+                initialiseDetectorsAndSources();
+            }
+        }
     }
 }
